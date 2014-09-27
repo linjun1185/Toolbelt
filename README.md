@@ -3,7 +3,7 @@ PHP Utilities
 
 PHP utilities library written in Zephir.
 
-- Http
+- Http (curl)
   + Request
   + Response
   + Uri
