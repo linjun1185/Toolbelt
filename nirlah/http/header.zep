@@ -89,7 +89,7 @@ class Header implements \Countable {
 		}
 
 		var status = [];
-		if preg_match("", content[0], status) {
+		if preg_match("|HTTP/(\\d(?:\\.\\d)?)\\s+(\\d{3})\\s+(.+)|i", content[0], status) {
 			let this->status = array_shift(content);
 			let this->version = status[1];
 			let this->statusCode = intval(status[2]);

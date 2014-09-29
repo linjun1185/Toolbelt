@@ -68,7 +68,7 @@ class Request {
 		if count(this->header) > 0 {
 			let header = this->header->build();
 		}
-		// let header[] = "Expect:";
+		let header[] = "Expect:";
 		this->setOption(CURLOPT_HTTPHEADER, header);
 
 		// Register options & execute:
@@ -137,28 +137,19 @@ class Request {
 
 	protected function setDefaultOptions() -> void
 	{
-		var options = [];
-		let options[CURLOPT_RETURNTRANSFER] = true;
-		let options[CURLOPT_AUTOREFERER] = true;
-		let options[CURLOPT_FOLLOWLOCATION] = true;
-		let options[CURLOPT_HEADER] = true;
-		let options[CURLOPT_PROTOCOLS] = CURLPROTO_HTTP | CURLPROTO_HTTPS;
-		let options[CURLOPT_REDIR_PROTOCOLS] = CURLPROTO_HTTP | CURLPROTO_HTTPS;
-		this->setOptions(options);
+		this->setOption(CURLOPT_RETURNTRANSFER, true);
+		this->setOption(CURLOPT_AUTOREFERER, true);
+		this->setOption(CURLOPT_FOLLOWLOCATION, true);
+		this->setOption(CURLOPT_HEADER, true);
+		this->setOption(CURLOPT_CONNECTTIMEOUT, 30);
+		this->setOption(CURLOPT_TIMEOUT, 30);
+		this->setOption(CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+		this->setOption(CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
 	}
 
-	public function setOption(const option, value = null) -> void
+	public function setOption(const int option, value = null) -> void
 	{
-		if typeof option == "array" {
-			this->setOptions(option);
-		} else {
-			let this->options[option] = value;
-		}
-	}
-
-	public function setOptions(const array options) -> void
-	{
-		let this->options = array_merge(this->options, options);
+		let this->options[option] = value;
 	}
 
 	public function getOption(const option) -> var
