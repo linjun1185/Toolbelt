@@ -41,6 +41,15 @@
     "name": "nirlah",
     "description": "Utilities library.",
     "author": "Nir Lahad",
-    "version": "0.1.0",
-    "verbose": false
+    "version": "1.0.0-dev",
+    "verbose": false,
+    "info": [
+        {
+            "header": ["Component", "Version"],
+            "rows": [
+                ["Http", "1.0.0-dev"],
+                ["Fetch", "1.0.0-dev"]
+            ]
+        }
+    ]
 }
