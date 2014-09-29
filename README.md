@@ -5,13 +5,10 @@ _Nirlah_ Toolbelt
 
 - **Graph** - Neo4j ObjectGraphMapper.
 - **Neo4j** - Neo4j rest api client.
-- **Wrap** - Wrap xml/json apis with objects.
+- **Wrap** - Map apis and webpages with objects.
   + Xml
   + Json
   + Html
-- **Fetch** - Crawl & parse websites.
-  + Html
-  + Uri
 - **HTTP** - Curl based HTTP client.
   + Request
   + Response
