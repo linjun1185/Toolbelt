@@ -47,8 +47,8 @@
         {
             "header": ["Component", "Version", "Description"],
             "rows": [
-                ["Http", "1.0.0", "Http client base on curl."],
-                ["Neo4j", "1.0.0-dev", "Neo4j rest api client."],
+                ["Http", "1.0.0", "Curl based HTTP client"],
+                ["Neo4j", "1.0.0-dev", "Neo4j rest api client (Based on Neoxygen\\neoclient)."],
                 ["Graph", "1.0.0-dev", "Neo4j OGM."],
                 ["Fetch", "1.0.0-dev", "Crawl & parse websites."],
                 ["Wrap", "1.0.0-dev", "Wrap xml/json apis with objects."],
