@@ -2,9 +2,9 @@ namespace Nirlah\Http;
 
 class Request {
 
-	protected curl;
-	protected uri;
+	public uri;
 	public header;
+	protected curl;
 	protected options = [];
 	protected params = [];
 
