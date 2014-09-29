@@ -151,7 +151,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 		return this;
 	}
 
-	public function shaffle() -> <Collection>
+	public function shuffle() -> <Collection>
 	{
 		shuffle(this->items);
 		return this;
