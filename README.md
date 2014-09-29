@@ -15,3 +15,5 @@ _Nirlah_ Toolbelt
   + Xml
   + Json
 - **Fetch** - Crawl & parse websites.
+  + Html
+  + Uri
