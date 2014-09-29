@@ -45,10 +45,14 @@
     "verbose": false,
     "info": [
         {
-            "header": ["Component", "Version"],
+            "header": ["Component", "Version", "Description"],
             "rows": [
-                ["Http", "1.0.0-dev"],
-                ["Fetch", "1.0.0-dev"]
+                ["Http", "1.0.0", "Http client base on curl."],
+                ["Neo4j", "1.0.0-dev", "Neo4j rest api client."],
+                ["Graph", "1.0.0-dev", "Neo4j OGM."],
+                ["Fetch", "1.0.0-dev", "Crawl & parse websites."],
+                ["Wrap", "1.0.0-dev", "Wrap xml/json apis with objects."],
+                ["Collection", "1.0.0", "Feature rich collection object."]
             ]
         }
     ]
