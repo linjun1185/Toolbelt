@@ -1,7 +1,7 @@
 _Nirlah_ Toolbelt
 =================
 
-PHP utilities library written in Zephir.
+**PHP utilities library written in Zephir.**
 
 - **HTTP** - Curl based HTTP client.
   + Request
