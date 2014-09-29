@@ -177,24 +177,24 @@ class Header implements \Countable {
 		return count(this->fields);
 	}
 
-	// public function __set(const string field, const value) -> void
-	// {
-	// 	this->setField(field, value);
-	// }
+	public function __set(const string field, const value) -> void
+	{
+		this->setField(field, value);
+	}
 
-	// public function __get(const string field) -> var
-	// {
-	// 	return this->getField(field);
-	// }
+	public function __get(const string field) -> var
+	{
+		return this->getField(field);
+	}
 
-	// public function __isset(const string field) -> boolean
-	// {
-	// 	return this->hasField(field);
-	// }
+	public function __isset(const string field) -> boolean
+	{
+		return this->hasField(field);
+	}
 
-	// public function __unset(const string field) -> void
-	// {
-	// 	this->unsetField(field);
-	// }
+	public function __unset(const string field) -> void
+	{
+		this->unsetField(field);
+	}
 	
 }
