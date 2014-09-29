@@ -56,6 +56,33 @@ class Uri {
 		return protocol.auth.this->_baseUri.path.query;
 	}
 
+	public function resolveQuery(query) -> string
+	{
+		var protocol, auth;
+		let protocol = this->buildProtocol(),
+			auth = this->buildAuth();
+
+		if empty(query) {
+			let query = "";
+		} elseif typeof query == "string" {
+			if substr(query, 0, 1) != "?" {
+				let query = "?".query;
+			}
+		} else { // array
+			var pairs = [], key, value;
+			for key, value in query {
+				if typeof key == "string" {
+					let pairs[] = key."=".value;
+				} else {
+					let pairs[] = value;
+				}
+			}
+			let query = "?".implode("&", pairs);
+		}
+
+		return protocol.auth.this->_baseUri.this->_path.query;
+	}
+
 	public function build() -> string
 	{
 		var protocol, auth, query;
