@@ -46,10 +46,12 @@ class Uri {
 			let path = substr(path, 0, -1);
 		}
 
+		boolean isEmptyPath;
+		let isEmptyPath = empty(this->_path);
 		// Extend or replace?
 		if substr(path, 0, 1) == "/" {
 			let path = substr(path, 1);
-		} else {
+		} elseif !isEmptyPath {
 			let path = this->_path . "/" . path;
 		}
 
@@ -108,9 +110,9 @@ class Uri {
 	protected function buildAuth() -> string
 	{
 		var auth = "";
-		if isset(this->_user) {
+		if empty(this->_user) == false {
 			let auth = "".this->_user;
-			if isset(this->_pass) {
+			if empty(this->_pass) == false {
 				let auth .= ":".this->_pass;
 			}
 			let auth .= "@";
