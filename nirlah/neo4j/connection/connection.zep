@@ -16,18 +16,34 @@ class Connection {
 	protected user;
 	protected pass;
 
-	public function __construct(const string host, const int port, const boolean secure = false, const string user = null, const string pass = null)
+	public function __construct(const host = null, const int port = null, const boolean secure = false, const string user = null, const string pass = null)
 	{
-		this->config(host, port, user, pass);
+		if host != null {
+			this->config(host, port, user, pass);
+		}
 	}
 
-	public function config(const string host, const int port, const boolean secure = false, const string user = null, const string pass = null) -> void
+	public function config(const host, const int port = null, const boolean secure = false, const string user = null, const string pass = null) -> void
 	{
-		let this->host = host,
+		if typeof host == "array" {
+			this->arrayConfig(host);
+		} else {
+			let this->host = host,
 			this->port = port,
 			this->secure = secure,
 			this->user = user,
-			this->pass = pass;
+			this->pass = pass;	
+		}
+	}
+
+	protected function arrayConfig(const array config) -> void
+	{
+		var component;
+		for component in ["host","port","secure","user","pass"] {
+			if isset(config[component]) {
+				let this->{component} = config[component];
+			}
+		}
 	}
 
 	// ->post(path = "", params = []);

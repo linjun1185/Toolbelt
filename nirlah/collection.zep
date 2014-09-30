@@ -14,6 +14,11 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 		return this->items;
 	}
 
+	public function keys() -> array
+	{
+		return array_keys(this->items);
+	}
+
 	public function get(const key) -> var
 	{
 		return this->items[key];
