@@ -9,6 +9,7 @@ class Uri {
 	protected _params;
 	protected _user;
 	protected _pass;
+	protected _port;
 
 	public function __construct(const config = null)
 	{
@@ -36,10 +37,11 @@ class Uri {
 
 	public function resolve(path) -> string
 	{
-		var protocol, auth, query;
+		var protocol, auth, query, port;
 		let protocol = this->buildProtocol(),
 			auth = this->buildAuth(),
-			query = this->buildQuery();
+			query = this->buildQuery(),
+			port = this->buildPort();
 
 		// Remove trailing slash:
 		if substr(path, -1) == "/" {
@@ -55,14 +57,15 @@ class Uri {
 			let path = this->_path . "/" . path;
 		}
 
-		return protocol.auth.this->_baseUri.path.query;
+		return protocol.auth.this->_baseUri.port."/".path.query;
 	}
 
 	public function resolveQuery(query) -> string
 	{
-		var protocol, auth;
+		var protocol, auth, port;
 		let protocol = this->buildProtocol(),
-			auth = this->buildAuth();
+			auth = this->buildAuth(),
+			port = this->buildPort();
 
 		if empty(query) {
 			let query = "";
@@ -82,16 +85,17 @@ class Uri {
 			let query = "?".implode("&", pairs);
 		}
 
-		return protocol.auth.this->_baseUri.this->_path.query;
+		return protocol.auth.this->_baseUri.port."/".this->_path.query;
 	}
 
 	public function build() -> string
 	{
-		var protocol, auth, query;
+		var protocol, auth, query, port;
 		let protocol = this->buildProtocol(),
 			auth = this->buildAuth(),
-			query = this->buildQuery();
-		return protocol.auth.this->_baseUri.this->_path.query;
+			query = this->buildQuery(),
+			port = this->buildPort();
+		return protocol.auth.this->_baseUri.port."/".this->_path.query;
 	}
 
 	protected function buildProtocol() -> string
@@ -138,13 +142,22 @@ class Uri {
 		return query;
 	}
 
+	protected function buildPort() -> string
+	{
+		var port = "";
+		if empty(this->_port) == false {
+			let port = ":".this->_port;
+		}
+		return port;
+	}
+
 	// 
 	// Components Access
 	//
 
 	protected function validateComponentExists(const string component) -> void
 	{
-		var list = ["protocol","secure","baseUri","path","params","user","pass"];
+		var list = ["protocol","secure","baseUri","path","params","user","pass","port"];
 		if in_array(component, list) == false {
 			throw new HttpException("The component \"".component."\" is not a part of the uri.");
 		}
@@ -250,9 +263,16 @@ class Uri {
 			let uri = (string) parts[0];
 		}
 
-		// Add trailing slash:
-		if substr(uri, -1) != "/" {
-			let uri = uri."/";
+		// Port
+		let parts = explode(":", uri, 2);
+		if count(parts) > 1 {
+			this->setPort(parts[1]);
+			let uri = (string) parts[0];
+		}
+
+		// Remove trailing slash
+		if substr(uri, -1) == "/" {
+			let uri = substr(uri, 0, -1);
 		}
 
 		let this->_baseUri = uri;
@@ -308,6 +328,16 @@ class Uri {
 		let parts = explode(":", auth, 2);
 		let this->_user = parts[0];
 		let this->_pass = parts[1];
+	}
+
+	// Port
+
+	protected function setPort(const port) -> void
+	{
+		var match = [];
+		if preg_match("/(\\d+)/", port, match) {
+			let this->_port = (int) match[1];
+		}
 	}
 	
 }

@@ -41,18 +41,17 @@
     "name": "nirlah",
     "description": "Utilities library.",
     "author": "Nir Lahad",
-    "version": "1.0.0-dev",
+    "version": "0.0.0-dev",
     "verbose": false,
     "info": [
         {
             "header": ["Component", "Version", "Description"],
             "rows": [
+                ["Collection", "1.0.0", "Feature rich collection object."],
                 ["Http", "1.0.0", "Curl based HTTP client"],
+                ["Fetch", "1.0.0-dev", "Wrap apis & webpages with objects."],
                 ["Neo4j", "1.0.0-dev", "Neo4j rest api client."],
-                ["Graph", "1.0.0-dev", "Neo4j OGM."],
-                ["Fetch", "1.0.0-dev", "Crawl & parse websites."],
-                ["Wrap", "1.0.0-dev", "Wrap xml/json apis with objects."],
-                ["Collection", "1.0.0", "Feature rich collection object."]
+                ["Graph", "1.0.0-dev", "Neo4j OGM."]
             ]
         }
     ]
