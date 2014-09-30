@@ -2,7 +2,7 @@ namespace Nirlah\Http;
 
 class Uri {
 
-	protected _protocol;
+	protected _protocol = "http";
 	protected _secure = false;
 	protected _baseUri = "";
 	protected _path = "";

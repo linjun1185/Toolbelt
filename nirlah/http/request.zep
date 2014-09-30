@@ -30,9 +30,13 @@ class Request {
 	// Uri
 	//
 
-	public function setBaseUri(const string baseUri) -> void
+	public function setBaseUri(const baseUri) -> void
 	{
-		let this->uri = new Uri(baseUri);
+		if baseUri instanceof Uri {
+			let this->uri = baseUri;
+		} else {
+			let this->uri = new Uri(baseUri);
+		}
 	}
 
 	public function getBaseUri() -> string
