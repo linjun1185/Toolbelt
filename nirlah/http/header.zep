@@ -1,6 +1,9 @@
 namespace Nirlah\Http;
 
 class Header implements \Countable {
+
+	const BUILD_STATUS = 1;
+    const BUILD_FIELDS = 2;
 	
 	protected static messages;
 	protected version = "1.0";
@@ -9,8 +12,8 @@ class Header implements \Countable {
 	protected status = "";
 	protected fields = [];
 
-	const BUILD_STATUS = 1;
-    const BUILD_FIELDS = 2;
+	// Should throw exception on error?
+	public throwExceptions = true;
 
 	protected static function setMessages() -> void
 	{
@@ -94,6 +97,11 @@ class Header implements \Countable {
 			let this->version = status[1];
 			let this->statusCode = intval(status[2]);
 			let this->statusMessage = status[3];
+
+			// Trow exception on error:
+			if this->throwExceptions && this->statusCode >= 400 {
+				throw new HttpException("HTTP ".this->statusCode.": ".this->statusMessage, this->statusCode);
+			}
 		}
 
 		var field;

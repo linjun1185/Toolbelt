@@ -50,8 +50,7 @@
                 ["Collection", "1.0.0", "Feature rich collection object."],
                 ["Http", "1.0.0", "Curl based HTTP client"],
                 ["Fetch", "1.0.0-dev", "Wrap apis & webpages with objects."],
-                ["Neo4j", "1.0.0-dev", "Neo4j rest api client."],
-                ["Graph", "1.0.0-dev", "Neo4j OGM."]
+                ["Neo4j", "1.0.0-dev", "Neo4j REST api client."]
             ]
         }
     ]
