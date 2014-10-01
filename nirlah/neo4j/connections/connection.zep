@@ -1,4 +1,4 @@
-namespace Nirlah\Neo4j\Connection;
+namespace Nirlah\Neo4j\Connections;
 
 use Nirlah\Http\Request;
 use Nirlah\Http\Response;

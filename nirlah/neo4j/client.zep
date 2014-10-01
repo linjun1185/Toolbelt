@@ -1,18 +1,18 @@
 namespace Nirlah\Neo4j;
 
-use Nirlah\Neo4j\Connection\Manager as ConnectionManager;
-// use Nirlah\Neo4j\Commands\Manager as CommandsManager;
-use Nirlah\Neo4j\Connection\Connection;
+use Nirlah\Neo4j\Connections\Manager as ConnectionManager;
+use Nirlah\Neo4j\Commands\Manager as CommandsManager;
+use Nirlah\Neo4j\Connections\Connection;
 
 class Client {
 
 	protected connections;
 	protected commands;
 
-	public function construct()
+	public function __construct()
 	{
 		let this->connections = new ConnectionManager;
-		// let this->commands = new CommandsManager;
+		let this->commands = new CommandsManager;
 	}
 
 	//

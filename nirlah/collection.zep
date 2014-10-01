@@ -6,7 +6,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 
 	public function __construct(const array items = [])
 	{
-		let this->items = items;
+		let this->items = [];
 	}
 
 	public function all() -> array

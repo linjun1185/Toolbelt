@@ -1,8 +1,11 @@
-namespace Nirlah\Neo4j\Connection;
+namespace Nirlah\Neo4j\Connections;
 
 use Nirlah\Collection;
 
 class Manager extends Collection {
+
+	const DEFAULT_HOST = "localhost";
+	const DEFAULT_PORT = 7474;
 
 	protected defaultName;
 
@@ -10,7 +13,7 @@ class Manager extends Collection {
 	{
 		parent::__construct();
 		var defaultConnection;
-		let defaultConnection = new Connection("localhost", 4747);
+		let defaultConnection = new Connection(self::DEFAULT_HOST, self::DEFAULT_PORT);
 		let this->defaultName = defaultName;
 		let this->{defaultName} = defaultConnection;
 	}
