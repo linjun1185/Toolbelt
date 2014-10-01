@@ -3,8 +3,8 @@ _Nirlah_ Toolbelt
 
 **PHP utilities library written in Zephir.**
 
-- **Graph** - Neo4j ObjectGraphMapper.
-- **Neo4j** - Neo4j rest api client.
+- **Neo4j** - Neo4j REST api client.
+  + Client
 - **Fetch** - Map apis and webpages with objects.
   + Xml
   + Json
