@@ -1,5 +1,5 @@
 namespace Nirlah\Neo4j\Entities;
 
-class Relationship {
+class Relationship extends Entity {
 	
 }

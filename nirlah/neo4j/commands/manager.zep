@@ -2,6 +2,7 @@ namespace Nirlah\Neo4j\Commands;
 
 use Nirlah\Collection;
 use Nirlah\Neo4j\Neo4jException;
+use Nirlah\Http\Request;
 
 class Manager extends Collection {
 
@@ -11,7 +12,7 @@ class Manager extends Collection {
 		this->registerCoreCommands();
 	}
 
-	public function execute(const string command, const array arguments = [], const connection)
+	public function execute(const string command, const array arguments = [], const <Request> client)
 	{
 		if !this->has(command) {
 			throw new Neo4jException("The command \"".command."\" is not registerd.");
@@ -20,8 +21,8 @@ class Manager extends Collection {
 		var reflection, instance;
 		let reflection = new \ReflectionClass(this->{command});
 		let instance = reflection->newInstance();
-		instance->setConnection(connection);
-		return instance->run(arguments);
+		instance->setClient(client);
+		return call_user_func_array([instance, "run"], arguments);
 	}
 
 	protected function registerCoreCommands()
@@ -32,9 +33,11 @@ class Manager extends Collection {
 				"getVersion": "Nirlah\\Neo4j\\Commands\\Root\\GetVersion",
 				"listLabels": "Nirlah\\Neo4j\\Commands\\Root\\ListLabels",
 				"listTypes": "Nirlah\\Neo4j\\Commands\\Root\\ListTypes",
-				"listProperties": "Nirlah\\Neo4j\\Commands\\Root\\ListProperties"
+				"listProperties": "Nirlah\\Neo4j\\Commands\\Root\\ListProperties",
 			// Node
-
+				"getNode": "Nirlah\\Neo4j\\Commands\\Node\\GetNode",
+				"nodeProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeProperties",
+				"nodeLabels": "Nirlah\\Neo4j\\Commands\\Node\\NodeLabels"
 			// Relationship
 
 			// Transaction

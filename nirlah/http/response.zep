@@ -23,12 +23,12 @@ class Response {
 	protected static function decodeJson(const string json, const boolean toArray = false) -> array|<\stdClass>
 	{
 		var parsed;
-		let parsed = \json_decode(json, toArray);
+		let parsed = json_decode(json, toArray);
 
-		if \json_last_error() == JSON_ERROR_NONE {
+		if json_last_error() == JSON_ERROR_NONE {
 			return parsed;
 		} else {
-			throw new HttpException(\json_last_error_msg());
+			throw new HttpException(json_last_error_msg());
 		}
 	}
 

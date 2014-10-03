@@ -7,7 +7,7 @@ class ListLabels extends Command {
 	public function run()
 	{
 		var response;
-		let response = this->connection->get("/labels");
+		let response = this->client->get("labels");
 		return response->toArray();
 	}
 

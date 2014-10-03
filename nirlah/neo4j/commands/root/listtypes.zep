@@ -7,7 +7,7 @@ class ListTypes extends Command {
 	public function run()
 	{
 		var response;
-		let response = this->connection->get("relationship/types");
+		let response = this->client->get("relationship/types");
 		return response->toArray();
 	}
 

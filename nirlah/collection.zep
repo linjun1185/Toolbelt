@@ -4,9 +4,13 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 	
 	protected items;
 
-	public function __construct(const array items = [])
+	public function __construct(const items = [])
 	{
-		let this->items = [];
+		if typeof items == "array" {
+			let this->items = items;
+		} elseif items instanceof Collection {
+			let this->items = items->all();
+		}
 	}
 
 	public function all() -> array

@@ -1,14 +1,14 @@
 namespace Nirlah\Neo4j\Commands;
 
-use Nirlah\Neo4j\Connections\Connection;
+use Nirlah\Http\Request;
 
 abstract class Command {
 
-	protected connection;
+	protected client;
 
-	public function setConnection(const <Connection> connection) -> void
+	public function setClient(const <Request> client) -> void
 	{
-		let this->connection = connection;
+		let this->client = client;
 	}
 	
 	abstract public function run();

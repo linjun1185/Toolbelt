@@ -7,7 +7,7 @@ class ListProperties extends Command {
 	public function run()
 	{
 		var response;
-		let response = this->connection->get("propertykeys");
+		let response = this->client->get("propertykeys");
 		return response->toArray();
 	}
 

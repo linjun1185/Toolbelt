@@ -7,7 +7,7 @@ class GetVersion extends Command {
 	public function run()
 	{
 		var response;
-		let response = this->connection->get("/");
+		let response = this->client->get("");
 		return response->toObject()->neo4j_version;
 	}
 

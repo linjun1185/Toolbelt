@@ -32,7 +32,7 @@ class Request {
 
 	public function setBaseUri(const baseUri) -> void
 	{
-		if baseUri instanceof Uri {
+		if is_object(baseUri) && (baseUri instanceof Uri) {
 			let this->uri = baseUri;
 		} else {
 			let this->uri = new Uri(baseUri);
@@ -89,7 +89,7 @@ class Request {
 		let response = new Response;
 		response->header->parse(substr(content, 0, headerSize));
 		let response->body = substr(content, headerSize);
-		
+
 		return response;
 	}
 
