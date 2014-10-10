@@ -7,6 +7,9 @@ _Nirlah_ Toolbelt
 
 - **Neo4j** - Neo4j REST api client.
   + Client
+  + Commands
+  + Cypher
+  + OGM
 - **Fetch** - Map apis and webpages with objects.
   + Xml
   + Json
@@ -16,4 +19,4 @@ _Nirlah_ Toolbelt
   + Response
   + Uri
   + Header
-- **Collection** - Feature rich collection object.
+- [**Collection**](https://github.com/Nirlah/Toolbelt/wiki/Collection) - Feature rich collection object.
