@@ -60,29 +60,33 @@ class Uri {
 		return protocol.auth.this->_baseUri.port."/".path.query;
 	}
 
-	public function resolveQuery(query) -> string
+	public function resolveQuery(query, boolean json = false) -> string
 	{
-		var protocol, auth, port;
+		var protocol, auth, port, count;
 		let protocol = this->buildProtocol(),
 			auth = this->buildAuth(),
 			port = this->buildPort();
 
-		if empty(query) {
+		let count = count(query);
+		if count == 0 {
 			let query = "";
-		} elseif typeof query == "string" {
-			if substr(query, 0, 1) != "?" {
-				let query = "?".query;
-			}
-		} else { // array
+		} elseif is_array(query) {
 			var pairs = [], key, value;
 			for key, value in query {
+				if json {
+					let value = json_encode(value);
+				}
 				if typeof key == "string" {
-					let pairs[] = key."=".value;
+					let pairs[] = urlencode(key)."=".urlencode(value);
 				} else {
-					let pairs[] = value;
+					let pairs[] = urlencode(value);
 				}
 			}
 			let query = "?".implode("&", pairs);
+		} else { // string
+			if substr(query, 0, 1) != "?" {
+				let query = "?".query;
+			}
 		}
 
 		return protocol.auth.this->_baseUri.port."/".this->_path.query;

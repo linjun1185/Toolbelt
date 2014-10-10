@@ -7,6 +7,7 @@ class Request {
 	protected curl;
 	protected options = [];
 	protected params = [];
+	protected json = false;
 
 	public function __construct()
 	{
@@ -55,10 +56,10 @@ class Request {
 		let uri = this->uri->resolve(resolvePath);
 
 		if count(this->params) > 0 {
-			let uri = new Uri(uri);
-			let uri = uri->resolveQuery(this->params);
+			var baseUri;
+			let baseUri = new Uri(uri);
+			let uri = baseUri->resolveQuery(this->params, true);
 		}
-
 		return uri;
 	}
 
@@ -103,7 +104,11 @@ class Request {
 
 	public function post(const string resolvePath, const boolean encodeParams = true) -> <Response>
 	{
-		this->setOption(CURLOPT_POSTFIELDS, this->getPostParams(encodeParams));
+		if this->json {
+			this->setOption(CURLOPT_POSTFIELDS, this->getJsonParams());
+		} else {
+			this->setOption(CURLOPT_POSTFIELDS, this->getPostParams(encodeParams));
+		}
 		this->setOption(CURLOPT_URL, this->resolveUri(resolvePath));
 		this->setOption(CURLOPT_POST, true);
 		this->setOption(CURLOPT_CUSTOMREQUEST, "POST");
@@ -120,7 +125,11 @@ class Request {
 
 	public function put(const string resolvePath, const boolean encodeParams = true) -> <Response>
 	{
-		this->setOption(CURLOPT_POSTFIELDS, this->getPostParams(encodeParams));
+		if this->json {
+			this->setOption(CURLOPT_POSTFIELDS, this->getJsonParams());
+		} else {
+			this->setOption(CURLOPT_POSTFIELDS, this->getPostParams(encodeParams));
+		}
 		this->setOption(CURLOPT_URL, this->resolveUri(resolvePath));
 		this->setOption(CURLOPT_POST, true);
 		this->setOption(CURLOPT_CUSTOMREQUEST, "PUT");
@@ -192,6 +201,11 @@ class Request {
 		return params;
 	}
 
+	protected function getJsonParams() -> string
+	{
+		return json_encode(this->params);
+	}
+
 	public function setParams(const array params) -> void
 	{
 		let this->params = array_merge(this->params, params);
@@ -228,6 +242,11 @@ class Request {
 	public function unsetParam(const string param) -> void
 	{
 		unset(this->params[param]);
+	}
+
+	public function clearParams() -> void
+	{
+		let this->params = [];
 	}
 
 	public function __set(const string param, const value) -> void
@@ -271,6 +290,15 @@ class Request {
 	public function getHeader(const field) -> var
 	{
 		return this->header->getField(field);
+	}
+
+	public function useJson() -> void
+	{
+		this->setHeaders([
+			"Content-Type": "application/json",
+			"Accept": "application/json; charset=UTF-8"
+		]);
+		let this->json = true;
 	}
 
 }

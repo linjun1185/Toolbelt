@@ -56,6 +56,7 @@ class Connections extends Collection {
 	{
 		var config, request, uri;
 		let request = new Request;
+		request->useJson();
 		let config = parent::get(connection);
 
 		// Build Uri:

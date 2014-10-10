@@ -2,10 +2,10 @@ namespace Nirlah\Neo4j;
 
 use Nirlah\Neo4j\Connections as ConnectionManager;
 use Nirlah\Neo4j\Commands\Manager as CommandsManager;
+use Nirlah\Http\Request;
+use Nirlah\Collection;
 use Nirlah\Neo4j\Entities\Node;
 use Nirlah\Neo4j\Entities\Relationship;
-use Nirlah\Collection;
-use Nirlah\Http\Request;
 
 class Graph {
 
@@ -16,12 +16,9 @@ class Graph {
 	protected static nodes;
 	protected static relationships;
 	// protected static log;
-
-	public static function test()
-	{
-		var_dump(self::command("getNode", [12515]));
-		var_dump(self::command("nodeLabels", [12515]));
-	}
+	// 
+	// TODO log commands 
+	//
 
 	protected static function init()
 	{
@@ -61,8 +58,18 @@ class Graph {
 			} else {
 				return self::command("getNode", [node]);
 			}
-		} else {
+		} elseif is_object(node) {
+			var id;
+			let id = node->metadata->id;
+			if isset(self::nodes[id]) {
+				return self::nodes[id];
+			} else {
+				return new Node(node);
+			}
+		} elseif is_array(node) {
 			return new Node(node);
+		} else {
+			throw new Neo4jException("Node may be created only by ID, object or array.");
 		}
 	}
 

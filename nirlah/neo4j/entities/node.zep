@@ -29,11 +29,14 @@ class Node extends Entity {
 		this->setId((int) config->metadata->id);
 	}
 
-	protected function parseArray(const array config) -> void
+	protected function parseArray(const array properties) -> void
 	{
-		// 
-		// TODO
-		// 
+		this->setProperties(properties);
+	}
+
+	public function isDirty()
+	{
+		return this->isDirtyLabels() || this->isDirtyProperties();
 	}
 
 	// 
@@ -91,6 +94,29 @@ class Node extends Entity {
 		if this->exists && this->originalLabels == null {
 			let this->originalLabels = this->labels;
 		}
+	}
+
+	protected function isDirtyLabels() -> boolean
+	{
+		return !empty(this->getDirtyLabels());
+	}
+
+	protected function getDirtyLabels() -> array
+	{
+		this->loadLabels();
+		this->archiveOriginalLabels();
+		var dirty = [], label;
+		for label in this->labels {
+			if array_search(label, this->originalLabels) === false {
+				let dirty[label] = "add";
+			}
+		}
+		for label in this->originalLabels {
+			if array_search(label, this->labels) === false {
+				let dirty[label] = "remove";
+			}
+		}
+		return dirty;
 	}
 
 }

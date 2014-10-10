@@ -35,13 +35,26 @@ class Manager extends Collection {
 				"listTypes": "Nirlah\\Neo4j\\Commands\\Root\\ListTypes",
 				"listProperties": "Nirlah\\Neo4j\\Commands\\Root\\ListProperties",
 			// Node
+				// 
+				// TODO node properties set/add/remove
+				// 
 				"getNode": "Nirlah\\Neo4j\\Commands\\Node\\GetNode",
 				"nodeProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeProperties",
-				"nodeLabels": "Nirlah\\Neo4j\\Commands\\Node\\NodeLabels"
+				"nodeLabels": "Nirlah\\Neo4j\\Commands\\Node\\NodeLabels",
+				"createNode": "Nirlah\\Neo4j\\Commands\\Node\\CreateNode",
+				"addLabel": "Nirlah\\Neo4j\\Commands\\Node\\AddLabel",
+				"replaceLabel": "Nirlah\\Neo4j\\Commands\\Node\\ReplaceLabel",
+				"removeLabel": "Nirlah\\Neo4j\\Commands\\Node\\RemoveLabel",
+				"safeDeleteNode": "Nirlah\\Neo4j\\Commands\\Node\\SafeDeleteNode",
+				"deleteNode": "Nirlah\\Neo4j\\Commands\\Node\\DeleteNode",
+				"nodesFilter": "Nirlah\\Neo4j\\Commands\\Node\\NodesFilter",
+				"nodeSetProperties": "",
+				"nodeRemoveProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeRemoveProperties".
+				"nodeReplaceProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeReplaceProperties",
 			// Relationship
 
 			// Transaction
-
+				"cypher": "Nirlah\\Neo4j\\Commands\\Transaction\\Cypher"
 			// Schema
 
 		];

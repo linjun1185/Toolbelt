@@ -11,6 +11,12 @@ abstract class Entity implements \IteratorAggregate, \ArrayAccess {
 	protected properties;
 	protected originalProperties;
 
+	// 
+	// TODO add behaviors: timestamps, softdelete.
+	// TODO events.
+	// TODO date properties,
+	// 
+
 	public function __construct(const config = null)
 	{
 		// Config:
@@ -184,16 +190,29 @@ abstract class Entity implements \IteratorAggregate, \ArrayAccess {
 
 	protected function getDirtyProperties() -> array
 	{
-		// 
-		// TODO
-		// 
+		this->loadProperties();
+		this->archiveOriginalProperties();
+		var dirty = [], key, value;
+		for key, value in this->properties->all() {
+			if !this->originalProperties->has(key) {
+				let dirty[key] = value;
+			} else {
+				var numeric;
+				let numeric = this->isPropertyNumericallyEquivalent(key);
+				if value !== this->originalProperties->get(key) && !numeric {
+					let dirty[key] = value;
+				}
+			}
+		}
+		return dirty;
 	}
 
-	protected function isDirtyProperty() -> boolean
+	protected function isPropertyNumericallyEquivalent(const string key) -> boolean
 	{
-		// 
-		// TODO
-		// 
+		var current, original;
+		let current = this->properties->get(key);
+		let original = this->originalProperties->get(key);
+		return is_numeric(current) && is_numeric(original) && strcmp((string) current, (string) original) === 0;
 	}
 
 	// Array access
