@@ -49,7 +49,7 @@ class Manager extends Collection {
 				"deleteNode": "Nirlah\\Neo4j\\Commands\\Node\\DeleteNode",
 				"nodesFilter": "Nirlah\\Neo4j\\Commands\\Node\\NodesFilter",
 				"nodeSetProperties": "",
-				"nodeRemoveProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeRemoveProperties".
+				"nodeRemoveProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeRemoveProperties",
 				"nodeReplaceProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeReplaceProperties",
 			// Relationship
 

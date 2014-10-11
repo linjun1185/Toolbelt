@@ -4,7 +4,7 @@ use Nirlah\Neo4j\Commands\Command;
 
 class NodeRemoveProperties extends Command {
 
-	public function run(const node, const properties = null) -> array
+	public function run(const node, var properties = null)
 	{
 		if properties == null {
 			this->client->delete("node/".node."/properties");

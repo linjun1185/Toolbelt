@@ -72,7 +72,7 @@ class Connections extends Collection {
 		return request;
 	}
 	
-	public function set(const connection, const array config) -> <Collection>
+	public function set(const connection, const config) -> <Collection>
 	{
 		return parent::set(connection, config);
 	}
