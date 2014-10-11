@@ -2,14 +2,12 @@ namespace Nirlah;
 
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 	
-	protected items;
+	protected items = [];
 
-	public function __construct(const items = [])
+	public function __construct(const items = null)
 	{
-		if typeof items == "array" {
-			let this->items = items;
-		} elseif items instanceof Collection {
-			let this->items = items->all();
+		if items != null {
+			this->merge(items);
 		}
 	}
 
@@ -69,10 +67,12 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 
 	public function merge(const collection) -> <Collection>
 	{
-		if collection instanceof self {
+		if is_object(collection) && (collection instanceof Collection) {
 			let this->items = array_merge(this->items, collection->all());
-		} else {
+		} elseif is_array(collection) {
 			let this->items = array_merge(this->items, collection);
+		} else {
+			throw new \Exception("Collection can merge only array or another Collection.");
 		}
 		return this;
 	}
@@ -104,9 +104,9 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 	public function pull(const key) -> var
 	{
 		var value;
-		let value = this->items[key];
+		let value = [this->items[key]];
 		unset(this->items[key]);
-		return value;
+		return value[0];
 	}
 
 	public function random(const int amount = 1) -> var
@@ -146,7 +146,12 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 
 	public function lists(const key, const index = null) -> array
 	{
-		return array_column(this->items, key, index);
+		var items;
+		let items = array_column(this->items, key, index);
+		if index != null {
+			ksort(items);
+		}
+		return items;
 	}
 
 	public function count() -> int
@@ -172,7 +177,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 		return implode(glue, this->items);
 	}
 
-	public function implodeBy(const string glue, const key, const index = null) -> string
+	public function implodeBy(const key, const string glue, const index = null) -> string
 	{
 		return implode(glue, this->lists(key, index));
 	}

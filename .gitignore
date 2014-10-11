@@ -1,4 +1,4 @@
 *.log
 .temp
 ext
-export.sh
+/vendor/
