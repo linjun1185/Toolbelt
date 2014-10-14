@@ -10,7 +10,7 @@ _Nirlah_ Toolbelt
   + Commands
   + Cypher
   + OGM
-- **Fetch** - Map apis and webpages with objects.
+- **Fetch** - Map apis and webpages to objects.
   + Xml
   + Json
   + Html

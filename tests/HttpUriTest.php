@@ -75,6 +75,10 @@ class HttpUriTest extends PHPUnit_Framework_TestCase {
 
 		// Json:
 		$this->assertEquals("https://user:pass@host.com:4625/this/is/path?baz=acme&%23foo%40", $uri->resolveQuery(["baz"=>"acme","#foo@"]), true);
+
+		// Unsupported type:
+		$this->setExpectedException('Nirlah\Http\HttpException');
+		$uri->resolveQuery(1);
 	}
 
 	/**
