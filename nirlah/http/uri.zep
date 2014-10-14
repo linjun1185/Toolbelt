@@ -4,7 +4,7 @@ class Uri {
 
 	protected _protocol = "http";
 	protected _secure = false;
-	protected _baseUri = "";
+	protected _host = "";
 	protected _path = "";
 	protected _params;
 	protected _user;
@@ -19,8 +19,10 @@ class Uri {
 				for component, value in config {
 					let this->{component} = value;
 				}
-			} else {
+			} elseif typeof config == "string" {
 				this->parse(config);
+			} else {
+				throw new HttpException("URI may recive only array or string.");
 			}
 		}
 	}
@@ -30,76 +32,121 @@ class Uri {
 		return this->build();
 	}
 
-	public function parse(const string uri) -> void
+	public function parse(uri) -> void
 	{
-		this->setBaseUri(uri);
+		var parts;
+		
+		// Protocol:
+		let parts = explode("://", uri, 2);
+		if count(parts) > 1 {
+			this->setProtocol(parts[0]);
+			let uri = (string) parts[1];
+		}
+
+		// Auth:
+		let parts = explode("@", uri, 2);
+		if count(parts) > 1 {
+			this->setAuth((string) parts[0]);
+			let uri = (string) parts[1];
+		}
+
+		// Query:
+		let parts = explode("?", uri, 2);
+		if count(parts) > 1 {
+			this->setParams((string) parts[1]);
+			let uri = (string) parts[0];
+		}
+
+		// Path:
+		let parts = explode("/", uri, 2);
+		if count(parts) > 1 {
+			this->setPath("/".parts[1]);
+			let uri = (string) parts[0];
+		}
+
+		// Port:
+		let parts = explode(":", uri, 2);
+		if count(parts) > 1 {
+			this->setPort(parts[1]);
+			let uri = (string) parts[0];
+		}
+
+		// Host:
+		this->setHost(uri);
 	}
 
-	public function resolve(path) -> string
+	public function components() -> array
 	{
-		var protocol, auth, query, port;
-		let protocol = this->buildProtocol(),
-			auth = this->buildAuth(),
-			query = this->buildQuery(),
-			port = this->buildPort();
+		return [
+			"protocol": this->_protocol,
+			"secure": this->_secure,
+			"user": this->_user,
+			"pass": this->_pass,
+			"host": this->_host,
+			"port": this->_port,
+			"path": this->_path,
+			"params": this->_params
+		];
+	}
 
-		// Remove trailing slash:
-		if substr(path, -1) == "/" {
-			let path = substr(path, 0, -1);
+	public function build(boolean json = false) -> string
+	{
+		return this->resolve(null, null, json);
+	}
+
+	public function resolve(path = null, query = null, boolean json = false) -> string
+	{
+		var protocol, auth, port;
+		let protocol = this->buildProtocol();
+		let auth = this->buildAuth();
+		let port = this->buildPort();
+
+		// Path:
+		if path == null {
+			let path = this->_path;
+		} else {
+			// Remove trailing slash:
+			if substr(path, -1) == "/" {
+				let path = substr(path, 0, -1);
+			}
+
+			boolean isEmptyPath;
+			let isEmptyPath = empty(this->_path);
+			// Overwrite? Extend?
+			if substr(path, 0, 1) == "/" {
+				let path = substr(path, 1);
+			} elseif !isEmptyPath {
+				let path = this->_path . "/" . path;
+			}
 		}
 
-		boolean isEmptyPath;
-		let isEmptyPath = empty(this->_path);
-		// Extend or replace?
-		if substr(path, 0, 1) == "/" {
-			let path = substr(path, 1);
-		} elseif !isEmptyPath {
-			let path = this->_path . "/" . path;
+		// Query:
+		if query == null {
+			let query = this->buildQuery(json);
+		} elseif empty(query) {
+			let query = "";
+		} elseif typeof query == "string" {
+			// Add leading '?':
+			if substr(query, 0, 1) != '?' {
+				let query = "?".query;
+			}
+		} elseif typeof query == "array" {
+			let query = this->buildQuery(json, query);
+		} else {
+			throw new HttpException("The query must be an array or string.");
 		}
 
-		return protocol.auth.this->_baseUri.port."/".path.query;
+		return protocol.auth.this->_host.port."/".path.query;
+	}
+
+	public function resolvePath(path) -> string
+	{
+		return this->resolve(path);
 	}
 
 	public function resolveQuery(query, boolean json = false) -> string
 	{
-		var protocol, auth, port, count;
-		let protocol = this->buildProtocol(),
-			auth = this->buildAuth(),
-			port = this->buildPort();
-
-		let count = count(query);
-		if count == 0 {
-			let query = "";
-		} elseif is_array(query) {
-			var pairs = [], key, value;
-			for key, value in query {
-				if json {
-					let value = json_encode(value);
-				}
-				if typeof key == "string" {
-					let pairs[] = urlencode(key)."=".urlencode(value);
-				} else {
-					let pairs[] = urlencode(value);
-				}
-			}
-			let query = "?".implode("&", pairs);
-		} else { // string
-			if substr(query, 0, 1) != "?" {
-				let query = "?".query;
-			}
-		}
-
-		return protocol.auth.this->_baseUri.port."/".this->_path.query;
-	}
-
-	public function build() -> string
-	{
-		var protocol, auth, query, port;
-		let protocol = this->buildProtocol(),
-			auth = this->buildAuth(),
-			query = this->buildQuery(),
-			port = this->buildPort();
-		return protocol.auth.this->_baseUri.port."/".this->_path.query;
+		return this->resolve(null, query, json);
 	}
 
 	protected function buildProtocol() -> string
@@ -128,21 +175,31 @@ class Uri {
 		return auth;
 	}
 
-	protected function buildQuery() -> string
+	protected function buildQuery(boolean json = false, params = null) -> string
 	{
 		var query = "", key, value;
-		if empty(this->_params) == false {
+
+		// Local params or class params?
+		if params == null {
+			let params = this->_params;
+		}
+
+		if empty(params) == false {
 			let query = "?";
 			var pairs = [];
-			for key, value in this->_params {
+			for key, value in params {
+				if json {
+					let value = json_encode(value);
+				}
 				if typeof key == "string" {
-					let pairs[] = key."=".value;
+					let pairs[] = urlencode(key)."=".urlencode(value);
 				} else {
-					let pairs[] = value;
+					let pairs[] = urlencode(value);
 				}
 			}
 			let query .= implode("&", pairs);
 		}
+
 		return query;
 	}
 
@@ -161,7 +218,7 @@ class Uri {
 
 	protected function validateComponentExists(const string component) -> void
 	{
-		var list = ["protocol","secure","baseUri","path","params","user","pass","port"];
+		var list = ["protocol","secure","host","path","params","user","pass","port"];
 		if in_array(component, list) == false {
 			throw new HttpException("The component \"".component."\" is not a part of the uri.");
 		}
@@ -206,8 +263,6 @@ class Uri {
 		return empty(this->{component}) == false;
 	}
 
-	// Protocol
-
 	protected function setProtocol(value) -> void
 	{
 		if substr(value, -1) == "s" {
@@ -226,63 +281,15 @@ class Uri {
 		}
 	}
 
-	// Secure
-
-	protected function setSecure(const bool value) -> void
+	protected function setHost(uri) -> void
 	{
-		let this->_secure = value;
-	}
-
-	// BaseUri
-
-	protected function setBaseUri(uri) -> void
-	{
-		var parts;
-		
-		// Protocol
-		let parts = explode("://", uri, 2);
-		if count(parts) > 1 {
-			this->setProtocol(parts[0]);
-			let uri = (string) parts[1];
-		}
-
-		// Auth
-		let parts = explode("@", uri, 2);
-		if count(parts) > 1 {
-			this->setAuth((string) parts[0]);
-			let uri = (string) parts[1];
-		}
-
-		// Query
-		let parts = explode("?", uri, 2);
-		if count(parts) > 1 {
-			this->setParams((string) parts[1]);
-			let uri = (string) parts[0];
-		}
-
-		// Path
-		let parts = explode("/", uri, 2);
-		if count(parts) > 1 {
-			this->setPath("/".parts[1]);
-			let uri = (string) parts[0];
-		}
-
-		// Port
-		let parts = explode(":", uri, 2);
-		if count(parts) > 1 {
-			this->setPort(parts[1]);
-			let uri = (string) parts[0];
-		}
-
 		// Remove trailing slash
 		if substr(uri, -1) == "/" {
 			let uri = substr(uri, 0, -1);
 		}
 
-		let this->_baseUri = uri;
+		let this->_host = uri;
 	}
-
-	// Path
 
 	protected function setPath(value) -> void
 	{
@@ -298,8 +305,6 @@ class Uri {
 
 		let this->_path = value;
 	}
-
-	// Params / Query
 
 	protected function setParams(query) -> void
 	{
@@ -324,8 +329,6 @@ class Uri {
 		}
 	}
 
-	// Auth
-
 	protected function setAuth(const string auth) -> void
 	{
 		var parts;
@@ -333,8 +336,6 @@ class Uri {
 		let this->_user = parts[0];
 		let this->_pass = parts[1];
 	}
-
-	// Port
 
 	protected function setPort(const port) -> void
 	{
