@@ -69,7 +69,7 @@ class Request {
 
 	protected function send() -> <Response>
 	{
-		var header = [], content, headerSize, response;
+		var header = [], content, headerSize, body;
 		if count(this->header) > 0 {
 			let header = this->header->build();
 		}
@@ -87,11 +87,9 @@ class Request {
 
 		let headerSize = curl_getinfo(this->curl, CURLINFO_HEADER_SIZE);
 
-		let response = new Response;
-		response->header->parse(substr(content, 0, headerSize));
-		let response->body = substr(content, headerSize);
-
-		return response;
+		let body = substr(content, headerSize);
+		let header = substr(content, 0, headerSize);
+		return new Response(body, header);
 	}
 
 	public function get(const string resolvePath) -> <Response>

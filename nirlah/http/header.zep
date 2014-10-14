@@ -71,11 +71,15 @@ class Header implements \Countable {
 		];
 	}
 
-	public function __construct()
+	public function __construct(const string content = null)
 	{
 		// Set messages only once:
 		if empty(self::messages) {
 			this->setMessages();
+		}
+
+		if content != null {
+			this->parse(content);
 		}
 	}
 
