@@ -125,24 +125,22 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 		return values;
 	}
 
-	public function pullRandom(const int amount = 1) -> var
-	{
-		var keys, values, key;
-		let keys = array_rand(this->items, amount);
-		if amount == 1 {
-			let values = this->items[keys];
-			unset(this->items[keys]);
-			return values;
-		}
+	// public function pullRandom(const int amount = 1) -> var
+	// {
+	// 	var keys, values, key;
+	// 	let keys = array_rand(this->items, amount);
+	// 	if amount == 1 {
+	// 		return this->pull(keys);
+	// 	}
 
-		// Else:
-		let values = [];
-		for key in keys {
-			let values[key] = this->items[key];
-			unset(this->items[key]);
-		}
-		return values;
-	}
+	// 	// Else:
+	// 	let values = [];
+	// 	for key in keys {
+	// 		let values[key] = this->items[key];
+	// 		unset(this->items[key]);
+	// 	}
+	// 	return values;
+	// }
 
 	public function lists(const key, const index = null) -> array
 	{

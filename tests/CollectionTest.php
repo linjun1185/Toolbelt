@@ -159,10 +159,10 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("bang", $collection->pullLast());
 		$this->assertCount(2, $collection->all());
 
-		// Random:
-		$all = $collection->all();
-		$this->assertContains($collection->pullRandom(), $all);
-		$this->assertCount(1, $collection->all());
+		// // Random:
+		// $all = $collection->all();
+		// $this->assertContains($collection->pullRandom(), $all);
+		// $this->assertCount(1, $collection->all());
 	}
 
 	/**
