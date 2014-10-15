@@ -2,82 +2,16 @@ namespace Nirlah\Http;
 
 class Header implements \Countable {
 
-	const BUILD_STATUS = 1;
-    const BUILD_FIELDS = 2;
-	
-	protected static messages;
-	protected version = "1.0";
+	const THROW_EXCEPTIONS = true;
+
+	protected version = "";
 	protected statusCode = 0;
 	protected statusMessage = "";
 	protected status = "";
 	protected fields = [];
 
-	// Should throw exception on error?
-	public throwExceptions = true;
-
-	protected static function setMessages() -> void
-	{
-		let self::messages = [
-			// Informational 1xx
-			100: "Continue",
-			101: "Switching Protocols",
-
-			// Success 2xx
-			200: "OK",
-			201: "Created",
-			202: "Accepted",
-			203: "Non-Authoritative Information",
-			204: "No Content",
-			205: "Reset Content",
-			206: "Partial Content",
-
-			// Redirection 3xx
-			300: "Multiple Choices",
-			301: "Moved Permanently",
-			302: "Found",
-			303: "See Other",
-			304: "Not Modified",
-			305: "Use Proxy",
-			307: "Temporary Redirect",
-
-			// Client Error 4xx
-			400: "Bad Request",
-			401: "Unauthorized",
-			402: "Payment Required",
-			403: "Forbidden",
-			404: "Not Found",
-			405: "Method Not Allowed",
-			406: "Not Acceptable",
-			407: "Proxy Authentication Required",
-			408: "Request Timeout",
-			409: "Conflict",
-			410: "Gone",
-			411: "Length Required",
-			412: "Precondition Failed",
-			413: "Request Entity Too Large",
-			414: "Request-URI Too Long",
-			415: "Unsupported Media Type",
-			416: "Requested Range Not Satisfiable",
-			417: "Expectation Failed",
-
-			// Server Error 5xx
-			500: "Internal Server Error",
-			501: "Not Implemented",
-			502: "Bad Gateway",
-			503: "Service Unavailable",
-			504: "Gateway Timeout",
-			505: "HTTP Version Not Supported",
-			509: "Bandwidth Limit Exceede"
-		];
-	}
-
 	public function __construct(const string content = null)
 	{
-		// Set messages only once:
-		if empty(self::messages) {
-			this->setMessages();
-		}
-
 		if content != null {
 			this->parse(content);
 		}
@@ -103,7 +37,7 @@ class Header implements \Countable {
 			let this->statusMessage = status[3];
 
 			// Trow exception on error:
-			if this->throwExceptions && this->statusCode >= 400 {
+			if self::THROW_EXCEPTIONS && this->statusCode >= 400 {
 				throw new HttpException("HTTP ".this->statusCode.": ".this->statusMessage, this->statusCode);
 			}
 		}
@@ -120,12 +54,13 @@ class Header implements \Countable {
 		}
 	}
 
-	public function build(const int flags = 0) -> array|string
+	public function build(const int flags = 0) -> string
 	{
-		var lines = [];
-		if (flags & self::BUILD_STATUS) && isset(self::messages[this->statusCode]) {
+		var lines = [], message;
+		let message = self::getMessage(this->statusCode);
+		if message != false {
 			let lines[] = "HTTP/ ".this->version." ".this->statusCode.
-						  " ".self::messages[this->statusCode];
+						  " ".message;
 		}
 
 		var field, value;
@@ -133,11 +68,7 @@ class Header implements \Countable {
 			let lines[] = field.": ".value;
 		} 
 
-		if flags & self::BUILD_FIELDS {
-			return implode("\r\n", lines);
-		} else {
-			return lines;
-		}
+		return implode("\r\n", lines);
 	}
 
 	//
@@ -207,6 +138,68 @@ class Header implements \Countable {
 	public function __unset(const string field) -> void
 	{
 		this->unsetField(field);
+	}
+
+	protected static function getMessage(const int code) -> string|boolean
+	{
+		var messages = [
+			// Informational 1xx
+			100: "Continue",
+			101: "Switching Protocols",
+
+			// Success 2xx
+			200: "OK",
+			201: "Created",
+			202: "Accepted",
+			203: "Non-Authoritative Information",
+			204: "No Content",
+			205: "Reset Content",
+			206: "Partial Content",
+
+			// Redirection 3xx
+			300: "Multiple Choices",
+			301: "Moved Permanently",
+			302: "Found",
+			303: "See Other",
+			304: "Not Modified",
+			305: "Use Proxy",
+			307: "Temporary Redirect",
+
+			// Client Error 4xx
+			400: "Bad Request",
+			401: "Unauthorized",
+			402: "Payment Required",
+			403: "Forbidden",
+			404: "Not Found",
+			405: "Method Not Allowed",
+			406: "Not Acceptable",
+			407: "Proxy Authentication Required",
+			408: "Request Timeout",
+			409: "Conflict",
+			410: "Gone",
+			411: "Length Required",
+			412: "Precondition Failed",
+			413: "Request Entity Too Large",
+			414: "Request-URI Too Long",
+			415: "Unsupported Media Type",
+			416: "Requested Range Not Satisfiable",
+			417: "Expectation Failed",
+
+			// Server Error 5xx
+			500: "Internal Server Error",
+			501: "Not Implemented",
+			502: "Bad Gateway",
+			503: "Service Unavailable",
+			504: "Gateway Timeout",
+			505: "HTTP Version Not Supported",
+			509: "Bandwidth Limit Exceede"
+		];
+
+		if isset(messages[code]) {
+			return messages[code];
+		} else {
+			return false;
+		}
 	}
 	
 }
