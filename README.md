@@ -14,9 +14,9 @@ _Nirlah_ Toolbelt
   + Xml
   + Json
   + Html
-- **HTTP** - Curl based HTTP client.
+- [**HTTP**](https://github.com/Nirlah/Toolbelt/wiki/Http) - Curl based HTTP client.
   + Request
   + Response
-  + Uri
   + Header
+  + Uri
 - [**Collection**](https://github.com/Nirlah/Toolbelt/wiki/Collection) - Feature rich collection object.
