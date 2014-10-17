@@ -9,7 +9,7 @@ class Request {
 	protected params = [];
 	protected json = false;
 
-	public function __construct()
+	public function __construct(string uri = null)
 	{
 		// Check for CURL extension:
 		if !extension_loaded("curl") {
@@ -17,8 +17,8 @@ class Request {
 		}
 
 		let this->curl = curl_init();
-		let this->uri = new Uri();
 		let this->header = new Header();
+		this->setUri(uri);
 		this->setDefaultOptions();
 	}
 
@@ -31,7 +31,7 @@ class Request {
 	// Uri
 	//
 
-	public function setBaseUri(const baseUri) -> void
+	public function setUri(const baseUri) -> void
 	{
 		if is_object(baseUri) && (baseUri instanceof Uri) {
 			let this->uri = baseUri;
@@ -40,25 +40,23 @@ class Request {
 		}
 	}
 
-	public function getBaseUri() -> string
+	public function getUri() -> string
 	{
 		return this->uri->build();
 	}
 
 	protected function resolveUri(const string resolvePath) -> string
 	{
-		return this->uri->resolve(resolvePath);
+		return this->uri->resolvePath(resolvePath);
 	}
 
 	protected function resolveUriWithQuery(const string resolvePath) -> string
 	{
 		var uri;
-		let uri = this->uri->resolve(resolvePath);
-
 		if count(this->params) > 0 {
-			var baseUri;
-			let baseUri = new Uri(uri);
-			let uri = baseUri->resolveQuery(this->params, true);
+			let uri = this->uri->resolve(resolvePath, this->params, this->json);
+		} else {
+			let uri = this->uri->resolvePath(resolvePath);
 		}
 		return uri;
 	}
@@ -91,6 +89,12 @@ class Request {
 		let header = substr(content, 0, headerSize);
 		return new Response(body, header);
 	}
+
+	// 
+	// 
+	// Resolve Path -> optional
+	// 
+	// 
 
 	public function get(const string resolvePath) -> <Response>
 	{

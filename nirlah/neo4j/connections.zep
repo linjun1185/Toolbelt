@@ -67,7 +67,7 @@ class Connections extends Collection {
 		let uri->secure = isset(config["secure"]) ? config["secure"] : self::DEFAULT_SECURE;
 		let uri->user = isset(config["user"]) ? config["user"] : null;
 		let uri->pass = isset(config["pass"]) ? config["pass"] : null;
-		request->setBaseUri(uri);
+		request->setUri(uri);
 
 		return request;
 	}

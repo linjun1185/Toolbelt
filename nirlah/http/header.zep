@@ -4,13 +4,13 @@ class Header implements \Countable {
 
 	const THROW_EXCEPTIONS = true;
 
-	protected version = "";
-	protected statusCode = 0;
-	protected statusMessage = "";
-	protected status = "";
+	public version = "";
+	public statusCode = 0;
+	public statusMessage = "";
+	public status = "";
 	protected fields = [];
 
-	public function __construct(const string content = null)
+	public function __construct(const content = null)
 	{
 		if content != null {
 			this->parse(content);
@@ -59,7 +59,7 @@ class Header implements \Countable {
 		var lines = [], message;
 		let message = self::getMessage(this->statusCode);
 		if message != false {
-			let lines[] = "HTTP/ ".this->version." ".this->statusCode.
+			let lines[] = "HTTP/".this->version." ".this->statusCode.
 						  " ".message;
 		}
 
