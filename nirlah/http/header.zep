@@ -54,7 +54,7 @@ class Header implements \Countable {
 		}
 	}
 
-	public function build(const int flags = 0) -> string
+	public function build(const int flags = 0) -> array
 	{
 		var lines = [], message;
 		let message = self::getMessage(this->statusCode);
@@ -68,7 +68,7 @@ class Header implements \Countable {
 			let lines[] = field.": ".value;
 		} 
 
-		return implode("\r\n", lines);
+		return lines;
 	}
 
 	//

@@ -30,7 +30,7 @@ class Connections extends Collection {
 		let this->{name} = connection;
 	}
 
-	public function getDefault() -> <\Nirlah\Http\Request>
+	public function getDefault() -> <Request>
 	{
 		var name;
 		let name = this->defaultName;
@@ -44,7 +44,11 @@ class Connections extends Collection {
 			let name = this->defaultName;
 			let this->{name} = connection;
 		} elseif typeof connection == "string" {
-			let this->defaultName = connection;
+			if this->has(connection) {
+				let this->defaultName = connection;
+			} else {
+				throw new Neo4jException("The connection \"".connection."\" is not defined.");
+			}
 		} else {
 			throw new Neo4jException("Can only set default by name or config array.");
 		}
@@ -59,7 +63,7 @@ class Connections extends Collection {
 
 		// Build Uri:
 		let uri = new Uri;
-		let uri->baseUri = isset(config["host"]) ? config["host"] : self::DEFAULT_HOST;
+		let uri->host = isset(config["host"]) ? config["host"] : self::DEFAULT_HOST;
 		let uri->port = isset(config["port"]) ? config["port"] : self::DEFAULT_PORT;
 		let uri->path = self::BASE_PATH;
 		let uri->secure = isset(config["secure"]) ? config["secure"] : self::DEFAULT_SECURE;
@@ -74,6 +78,9 @@ class Connections extends Collection {
 	
 	public function set(const connection, const config) -> <Collection>
 	{
+		if !is_array(config) {
+			throw new Neo4jException("A connection must be an array of URI components.");
+		}
 		return parent::set(connection, config);
 	}
 
