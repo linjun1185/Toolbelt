@@ -2,4 +2,5 @@
 .temp
 ext
 /vendor/
-RegX
+/RegX/
+graph/
