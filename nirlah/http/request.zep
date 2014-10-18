@@ -45,18 +45,30 @@ class Request {
 		return this->uri->build();
 	}
 
-	protected function resolveUri(const string resolvePath) -> string
+	protected function resolveUri(const string resolvePath = null) -> string
 	{
-		return this->uri->resolvePath(resolvePath);
+		if empty(resolvePath) {
+			return this->uri->build();
+		} else {
+			return this->uri->resolvePath(resolvePath);
+		}
 	}
 
-	protected function resolveUriWithQuery(const string resolvePath) -> string
+	protected function resolveUriWithQuery(const string resolvePath = null) -> string
 	{
 		var uri;
 		if count(this->params) > 0 {
-			let uri = this->uri->resolve(resolvePath, this->params, this->json);
+			if empty(resolvePath) {
+				let uri = this->uri->resolveQuery(this->params, this->json);
+			} else {
+				let uri = this->uri->resolve(resolvePath, this->params, this->json);
+			}
 		} else {
-			let uri = this->uri->resolvePath(resolvePath);
+			if empty(resolvePath) {
+				let uri = this->uri->build();
+			} else {
+				let uri = this->uri->resolvePath(resolvePath);
+			}
 		}
 		return uri;
 	}
@@ -90,13 +102,7 @@ class Request {
 		return new Response(body, header);
 	}
 
-	// 
-	// 
-	// Resolve Path -> optional
-	// 
-	// 
-
-	public function get(const string resolvePath) -> <Response>
+	public function get(const string resolvePath = null) -> <Response>
 	{
 		this->setOption(CURLOPT_URL, this->resolveUriWithQuery(resolvePath));
 		this->setOption(CURLOPT_HTTPGET, true);
@@ -104,7 +110,7 @@ class Request {
 		return this->send();
 	}
 
-	public function post(const string resolvePath, const boolean encodeParams = true) -> <Response>
+	public function post(const string resolvePath = null, const boolean encodeParams = true) -> <Response>
 	{
 		if this->json {
 			this->setOption(CURLOPT_POSTFIELDS, this->getJsonParams());
@@ -117,7 +123,7 @@ class Request {
 		return this->send();
 	}
 
-	public function head(const string resolvePath) -> <Response>
+	public function head(const string resolvePath = null) -> <Response>
 	{
 		this->setOption(CURLOPT_URL, this->resolveUriWithQuery(resolvePath));
 		this->setOption(CURLOPT_HTTPGET, true);
@@ -125,7 +131,7 @@ class Request {
 		return this->send();
 	}
 
-	public function put(const string resolvePath, const boolean encodeParams = true) -> <Response>
+	public function put(const string resolvePath = null, const boolean encodeParams = true) -> <Response>
 	{
 		if this->json {
 			this->setOption(CURLOPT_POSTFIELDS, this->getJsonParams());
@@ -138,7 +144,7 @@ class Request {
 		return this->send();
 	}
 
-	public function delete(const string resolvePath) -> <Response>
+	public function delete(const string resolvePath = null) -> <Response>
 	{
 		this->setOption(CURLOPT_URL, this->resolveUriWithQuery(resolvePath));
 		this->setOption(CURLOPT_HTTPGET, true);
@@ -167,7 +173,7 @@ class Request {
 		let this->options[option] = value;
 	}
 
-	public function getOption(const option) -> var
+	public function getOption(const int option) -> var
 	{
 		if this->hasOption(option) {
 			return this->options[option];
@@ -176,7 +182,7 @@ class Request {
 		}
 	}
 
-	public function hasOption(const option) -> boolean
+	public function hasOption(const int option) -> boolean
 	{
 		return isset(this->options[option]);
 	}
@@ -289,9 +295,24 @@ class Request {
 		this->header->setFields(fields);
 	}
 
-	public function getHeader(const field) -> var
+	public function getHeader(const string field) -> var
 	{
 		return this->header->getField(field);
+	}
+
+	public function hasHeader(const string field) -> boolean
+	{
+		return this->header->hasField(field);
+	}
+
+	public function unsetHeader(const string field) -> void
+	{
+		this->header->unsetField(field);
+	}
+
+	public function clearHeaders() -> void
+	{
+		this->header->clearFields();
 	}
 
 	public function useJson() -> void

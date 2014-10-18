@@ -55,8 +55,6 @@ class Connections extends Collection {
 	public function get(const connection) -> <Request>
 	{
 		var config, request, uri;
-		let request = new Request;
-		request->useJson();
 		let config = parent::get(connection);
 
 		// Build Uri:
@@ -67,8 +65,10 @@ class Connections extends Collection {
 		let uri->secure = isset(config["secure"]) ? config["secure"] : self::DEFAULT_SECURE;
 		let uri->user = isset(config["user"]) ? config["user"] : null;
 		let uri->pass = isset(config["pass"]) ? config["pass"] : null;
-		request->setUri(uri);
 
+		let request = new Request;
+		let request->uri = uri;
+		request->useJson();
 		return request;
 	}
 	

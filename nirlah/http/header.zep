@@ -115,6 +115,11 @@ class Header implements \Countable {
 		}
 	}
 
+	public function clearFields() -> void
+	{
+		let this->fields = [];
+	}
+
 	public function count() -> int
 	{
 		return count(this->fields);
