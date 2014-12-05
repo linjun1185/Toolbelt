@@ -43,6 +43,9 @@
     "author": "Nir Lahad",
     "version": "0.0.0-dev",
     "verbose": false,
+    "requires": {
+        "extensions": []
+    },
     "info": [
         {
             "header": ["Component", "Version", "Description"],

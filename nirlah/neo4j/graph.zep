@@ -16,17 +16,14 @@ class Graph {
 	protected static nodes;
 	protected static relationships;
 	// protected static log;
+
 	// 
-	// TODO log commands 
+	// TODO log connections events
 	//
 
 	protected static function init()
 	{
 		if self::_init == false {
-			if !extension_loaded("phalcon") {
-				throw new Neo4jException("Neo4j requires Phalcon framework.");
-			}
-
 			let self::connections = new ConnectionManager;
 			let self::commands = new CommandsManager;
 
@@ -37,7 +34,6 @@ class Graph {
 	protected static function initEntities()
 	{
 		if self::_initEntities == false {
-			self::init();
 			let self::nodes = new Collection;
 			let self::relationships = new Collection;
 
@@ -69,7 +65,7 @@ class Graph {
 		} elseif is_array(node) {
 			return new Node(node);
 		} else {
-			throw new Neo4jException("Node may be created only by ID, object or array.");
+			throw new Neo4jException("Node may only be created by ID, object or array.");
 		}
 	}
 
@@ -94,6 +90,19 @@ class Graph {
 		self::initEntities();
 		let self::relationships[relationship->getId()] = relationship;
 	}
+
+	//
+	// Transactions
+	//
+
+	// ::trasaction(const statement = null, const array params = [])
+	// if statment == null -> new transaction
+	// is statment is int -> new transaction with ID
+	// else -> new transaction with statement ans params
+	// init()
+
+	// ::cypher(const statement, const array params = null)
+	// init()
 
 	//
 	// Commands

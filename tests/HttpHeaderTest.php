@@ -78,15 +78,6 @@ class HttpHeaderTest extends PHPUnit_Framework_TestCase {
 		new Nirlah\Http\Header($this->statusError);
 	}
 
-	public function testBuild()
-	{
-		$header = new Nirlah\Http\Header;
-		$header->version = 1.1;
-		$header->statusCode = 200;
-		$header->statusMessage = "OK";
-		$this->assertEquals("HTTP/1.1 200 OK", $header->build());
-	}
-
 	/**
 	 * @depends testParseFields
 	 */
@@ -107,6 +98,20 @@ class HttpHeaderTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(isset($header->foo));
 		unset($header->foo);
 		$this->assertFalse(isset($header->foo));
+	}
+
+	/**
+	 * @depends testFieldsAccess
+	 */
+	public function testBuild()
+	{
+		$header = new Nirlah\Http\Header;
+		$header->version = 1.1;
+		$header->statusCode = 200;
+		$header->statusMessage = "OK";
+		$this->assertEquals(["HTTP/1.1 200 OK"], $header->build());
+		$header->foo = "bar";
+		$this->assertEquals(["HTTP/1.1 200 OK","foo: bar"], $header->build());
 	}
 
 }

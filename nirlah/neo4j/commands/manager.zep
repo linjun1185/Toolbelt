@@ -50,11 +50,9 @@ class Manager extends Collection {
 				"nodesFilter": "Nirlah\\Neo4j\\Commands\\Node\\NodesFilter",
 				"nodeSetProperties": "",
 				"nodeRemoveProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeRemoveProperties",
-				"nodeReplaceProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeReplaceProperties",
+				"nodeReplaceProperties": "Nirlah\\Neo4j\\Commands\\Node\\NodeReplaceProperties"
 			// Relationship
 
-			// Transaction
-				"cypher": "Nirlah\\Neo4j\\Commands\\Transaction\\Cypher"
 			// Schema
 
 		];
